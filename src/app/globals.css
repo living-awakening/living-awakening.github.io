@@ -1,0 +1,190 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * 第八站「覺醒生活｜Living Awakening」閱讀網站 — 主題
+ * 視覺方向（交接檔五）：米白底、深灰字、少量低彩度藍綠重點、足夠留白、
+ * 水平繁體中文、正文18px起、行高約1.8、桌面限制行長。
+ * 不使用外部字型服務，採系統字型堆疊。
+ */
+
+@theme inline {
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--teal);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--paper-soft);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--paper-soft);
+  --color-muted-foreground: var(--ink-soft);
+  --color-accent: var(--paper-soft);
+  --color-accent-foreground: var(--ink);
+  --color-destructive: #8c3a2e;
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--teal);
+
+  /* 本站命名色 */
+  --color-paper: var(--paper);
+  --color-paper-soft: var(--paper-soft);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-teal: var(--teal);
+  --color-teal-deep: var(--teal-deep);
+  --color-teal-soft: var(--teal-soft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    "Helvetica Neue", Arial, "Hiragino Sans TC", "Noto Sans TC",
+    "PingFang TC", "Microsoft JhengHei", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* 米白暖底 */
+  --paper: #faf8f2;
+  --paper-soft: #f2eee4;
+  --surface: #fffdf9;
+  /* 深暖灰字 */
+  --ink: #39362f;
+  --ink-soft: #5f594e;
+  --ink-faint: #6f6858;
+  /* 低彩度藍綠重點 */
+  --teal: #2e6b5e;
+  --teal-deep: #22544a;
+  --teal-soft: #e5ede9;
+  /* 細線 */
+  --line: #e5e0d2;
+  --line-strong: #c9c1ae;
+}
+
+/* 閱讀基礎排版：正文18px、行高1.85 */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-size: 1.125rem;
+  line-height: 1.85;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 錨點不被固定頂欄覆蓋 */
+[id] {
+  scroll-margin-top: 4.75rem;
+}
+
+/* 鍵盤焦點清楚可見（不只靠淡色陰影） */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background-color: #cfe0da;
+  color: var(--teal-deep);
+}
+
+/* 揭露元件（原生 details／summary） */
+summary {
+  cursor: pointer;
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+.disclosure-chevron {
+  transition: transform 200ms ease;
+}
+details[open] > summary .disclosure-chevron {
+  transform: rotate(180deg);
+}
+
+/* 無 JavaScript 時隱藏增強功能控制（.js 由 layout 內嵌腳本加上） */
+.js-only {
+  display: none;
+}
+html.js .js-only {
+  display: inline-flex;
+}
+
+/* 資料標籤（來源卡等） */
+.meta-label {
+  color: var(--ink-soft);
+}
+
+/* 減少動態效果偏好 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 列印：完整呈現內容與來源；隱藏導覽與浮動控制 */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-size: 12pt;
+    line-height: 1.7;
+  }
+  /* 收合區塊在列印時展開（JS beforeprint 之外的後備） */
+  details:not([open]) > *:not(summary) {
+    display: block !important;
+    visibility: visible;
+  }
+  details:not([open])::details-content {
+    content-visibility: visible;
+    display: block;
+  }
+  summary .disclosure-chevron {
+    display: none;
+  }
+  summary {
+    min-height: 0;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  .chapter-block,
+  .source-entry,
+  .avoid-break {
+    break-inside: avoid;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
