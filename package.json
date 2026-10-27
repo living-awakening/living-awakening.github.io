@@ -1,0 +1,37 @@
+{
+  "name": "living-awakening",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Living Awakening｜覺醒生活：將靈性教導與日常實踐相連結的非商業繁體中文閱讀網站。",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "npm run build:static",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "build:static": "node scripts/build-static.mjs",
+    "serve:static": "node scripts/serve-static.mjs",
+    "verify:content": "node --experimental-strip-types scripts/verify-content.mts"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.525.0",
+    "next": "^16.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^16.1.1",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.5",
+    "typescript": "^5"
+  }
+}

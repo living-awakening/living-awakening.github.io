@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="靈性實踐（暫稱）網站圖示">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#faf8f2" stroke="#2e6b5e" stroke-width="4"/>
+  <circle cx="32" cy="32" r="20" fill="none" stroke="#2e6b5e" stroke-width="2" opacity="0.45"/>
+  <text x="32" y="41" text-anchor="middle" font-family="'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif" font-size="24" font-weight="600" fill="#2e6b5e">靈</text>
+</svg>
