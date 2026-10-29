@@ -54,7 +54,8 @@ function Paragraphs({ paragraphs }: { paragraphs: Paragraph[] }) {
 
 /**
  * 來源列：zh — S01｜《書名》〈篇名〉（序）；
- * en — S01 | 《書名》〈篇名〉 — 編輯英譯（附序號英譯）。
+ * en — S01 | 《書名》〈篇名〉 — 編輯英譯（附序號英譯）；
+ * id — S01 | 《書名》〈篇名〉 — 編輯印尼文譯（附序號印尼文譯）。
  */
 function bookTitleFor(s: SourceRef): string {
   return s.book === "jia" ? "要開悟讀這本書就夠了" : "靈性覺醒";
@@ -101,10 +102,21 @@ function ChapterSourceList({
                 <span lang="zh-Hant">
                   《{bookTitleFor(s)}》〈{s.title}〉
                 </span>
-                {s.titleEn ? <span> — {s.titleEn}</span> : null}
-                {s.sequenceEn ?? s.noteLabelEn ? (
-                  <span> ({s.sequenceEn ?? s.noteLabelEn})</span>
-                ) : null}
+                {lang === "en" ? (
+                  <>
+                    {s.titleEn ? <span> — {s.titleEn}</span> : null}
+                    {s.sequenceEn ?? s.noteLabelEn ? (
+                      <span> ({s.sequenceEn ?? s.noteLabelEn})</span>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    {s.titleId ? <span> — {s.titleId}</span> : null}
+                    {s.sequenceId ?? s.noteLabelId ? (
+                      <span> ({s.sequenceId ?? s.noteLabelId})</span>
+                    ) : null}
+                  </>
+                )}
               </>
             )}
           </a>

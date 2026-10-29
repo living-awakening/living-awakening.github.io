@@ -1,6 +1,14 @@
 # 覺醒生活｜Living Awakening｜兩書入門選讀閱讀網站
 
-這是第八個公益網站的原始碼專案：一個繁體中文、垂直捲動、六章可展開收合的靜態閱讀網站，選讀江慶淇老師《要開悟讀這本書就夠了》與《靈性覺醒》中與個人實踐最直接相關的教導。
+這是第八個公益網站的原始碼專案：一個垂直捲動、六章可展開收合的靜態閱讀網站，選讀江慶淇老師《要開悟讀這本書就夠了》與《靈性覺醒》中與個人實踐最直接相關的教導。
+
+提供三種語言版本：
+
+- 繁體中文（預設）：`/`
+- English（編輯翻譯）：`/en/`
+- Bahasa Indonesia（編輯翻譯）：`/id/`
+
+英／印尼文皆為編輯翻譯，非官方授權譯本；中文內容為基準，未隨本地化改動。語言選擇器位於頂欄右側（無障礙選單模式，含鍵盤操作與無 JavaScript 後備）。
 
 > **正式站名「覺醒生活｜Living Awakening」已確定**，集中設定於 `src/content/site.ts` 的 `SITE_NAME`，後續變更可集中修改該檔，不需更動其他內容。
 
@@ -24,27 +32,39 @@
 ```
 src/
   app/
-    layout.tsx        # html lang="zh-Hant"、metadata、favicon
-    page.tsx          # 單頁組裝：導讀、章節導覽、六章、頁末回顧、來源與編輯說明
+    (zh)/
+      layout.tsx        # 繁中根布局（html lang="zh-Hant"、metadata）
+      page.tsx          # 根路徑 / 組裝
+    (en)/
+      layout.tsx        # 英文根布局（html lang="en"、hreflang、canonical）
+      en/page.tsx       # /en/ 組裝
+    (id)/
+      layout.tsx        # 印尼文根布局（html lang="id"、hreflang、canonical）
+      id/page.tsx       # /id/ 組裝
+    not-found.tsx       # 三語 404 頁（靜態匯出為 404.html）
     globals.css       # 主題、閱讀排版、列印與減少動態樣式
   components/
-    reading-header.tsx        # 固定頂欄（站名、展開／收合六章）
+    reading-header.tsx        # 固定頂欄（站名、展開／收合六章、語言選擇器）
+    language-switcher.tsx     # 三語選擇器（選單模式、鍵盤、焦點管理、noscript 後備）
+    site-page.tsx             # 三語共用頁面組裝
     chapter-section.tsx       # 章節區塊（常顯示層＋兩層揭露）
     source-index.tsx          # 來源對照 S01–S21、書目、編輯說明
     return-to-top.tsx         # 回頂端浮動按鈕
     deep-link-controller.tsx  # 深層連結與列印展開控制（無 UI）
   content/            # 內容資料（唯一內容來源，總覽／章節／來源共用）
-    types.ts          # 內容模型（含四種內容分類）
-    chapters.ts       # 六章九欄文案（E1–E6）
+    types.ts          # 內容模型（含四種內容分類、三語欄位）
+    chapters.ts       # 六章九欄文案（E1–E6；繁中基準）
     sources.ts        # S01–S21 來源、兩書書目、版本與使用範圍（G1／G2／B2／H4）
     overview.ts       # 總覽與頁末文案（F2／E7）、編輯說明文字
-    site.ts           # 站名與部署設定
+    site.ts           # 站名、標語、三語介面字典與路由設定
+    en/               # 英文版內容（編輯翻譯；事實欄位沿用繁中單一來源）
+    id/               # 印尼文版內容（編輯翻譯；事實欄位沿用繁中單一來源）
   lib/
     reading-controls.ts       # 用戶端互動輔助（展開全部、深層連結、回頂）
 scripts/
-  build-static.mjs    # 靜態匯出建置（輸出 out/）
+  build-static.mjs    # 靜態匯出建置（輸出 out/；含 404.html lang 後處理）
   serve-static.mjs    # 本地靜態檔案伺服器（無外部相依）
-  verify-content.mts  # 內容驗證與閱讀時間重算（Node 22.6+，建議 24）
+  verify-content.mts  # 三語內容驗證與閱讀時間重算（Node 22.6+，建議 24）
 ```
 
  內容修改一律在 `src/content/` 進行；總覽摘要與章節本文共用同一份資料，不重複維護。
@@ -69,7 +89,7 @@ npm run dev        # http://localhost:3000
 npm run verify:content
 ```
 
-檢查：六章順序與固定章名、九欄齊備、第二章三項作為與「三個要素缺一不可」、40–90分鐘時長、S01–S21 完整與章節對應、《靈性覺醒》 ISBN 差異保留、禁用行銷語與外部 URL、以及**重新核算預設可見總覽的閱讀時間**。
+檢查：六章順序與固定章名、九欄齊備、第二章三項作為與「三個要素缺一不可」、40–90分鐘時長、S01–S21 完整與章節對應、《靈性覺醒》 ISBN 差異保留、禁用行銷語與外部 URL、以及**重新核算預設可見總覽的閱讀時間**；另含**三語對等**（英／印尼文與繁中版的章節結構、來源事實欄位、介面字典鍵位、未翻譯殘留偵測）。
 
 ## 型別檢查與 Lint
 
@@ -84,7 +104,7 @@ npm run lint        # eslint .
 npm run build:static
 ```
 
-- 輸出至 **`out/**（可直接上傳的完整靜態站台**，含 `index.html`、`404.html`、`_next/` 資產）。
+- 輸出至 **`out/**（可直接上傳的完整靜態站台**，含 `index.html`、`en/index.html`、`id/index.html`、`404.html`、`_next/` 資產）。
 - 建置中繼檔寫入 `.next-export/`，不會干擾開發模式的 `.next/`。
 - 所有閱讀互動（展開收合、深層連結 `#chapter-N`、`#chapter-N-content`、`#chapter-N-deeper`、`#source-SXX`）在匯出站台上完全可用。
 

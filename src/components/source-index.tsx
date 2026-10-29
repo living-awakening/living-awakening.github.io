@@ -19,13 +19,16 @@ function BookCard({ book, lang, ui }: { book: BookInfo; lang: Lang; ui: UIString
         {lang === "en" && book.titleEn ? (
           <span className="ml-2 text-base font-semibold text-ink-soft">({book.titleEn})</span>
         ) : null}
+        {lang === "id" && book.titleId ? (
+          <span className="ml-2 text-base font-semibold text-ink-soft">({book.titleId})</span>
+        ) : null}
       </h4>
       <dl className="mt-3 grid gap-x-8 gap-y-2.5 text-[0.98rem] leading-relaxed sm:grid-cols-2">
         <div>
           <dt className="text-[0.82rem] text-ink-soft">{ui.authorLabel}</dt>
           <dd className="font-medium">
             <span lang="zh-Hant">{book.author}</span>
-            {lang === "zh" ? "老師" : " (Teacher Jiang Qingqi)"}
+            {lang === "zh" ? "老師" : lang === "en" ? " (Teacher Jiang Qingqi)" : " (Guru Jiang Qingqi)"}
             {book.authorNote ? (
               <span className="font-normal text-ink-soft">
                 {lang === "zh" ? "" : " "}
@@ -128,6 +131,14 @@ function SourceEntry({
             {source.titleEn}
             {source.sequenceEn || source.noteLabelEn
               ? ` (${source.sequenceEn ?? source.noteLabelEn})`
+              : ""}
+          </span>
+        ) : null}
+        {lang === "id" && (source.titleId || source.sequenceId || source.noteLabelId) ? (
+          <span className="mt-0.5 block text-[0.88rem] leading-relaxed text-ink-soft">
+            {source.titleId}
+            {source.sequenceId || source.noteLabelId
+              ? ` (${source.sequenceId ?? source.noteLabelId})`
               : ""}
           </span>
         ) : null}
