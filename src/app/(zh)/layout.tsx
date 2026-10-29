@@ -1,8 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import "./globals.css";
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_NAME, BASE_PATH } from "@/content/site";
+import "../globals.css";
+import {
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  BASE_PATH,
+  SITE_ORIGIN,
+  alternateLanguages,
+  canonicalPath,
+} from "@/content/site";
 
+/** 繁體中文版（預設，根路徑 /）根布局與詮釋資料 */
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_ORIGIN),
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
@@ -15,6 +25,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "zh_TW",
     siteName: SITE_NAME,
+  },
+  alternates: {
+    canonical: canonicalPath("zh"),
+    languages: alternateLanguages(),
   },
   robots: {
     index: true,

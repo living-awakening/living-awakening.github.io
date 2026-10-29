@@ -12,7 +12,7 @@
  */
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { cpSync, existsSync, rmSync, readdirSync, statSync } from "node:fs";
+import { cpSync, existsSync, rmSync, readdirSync, statSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const require = createRequire(import.meta.url);
@@ -57,6 +57,19 @@ cpSync(distDir, outDir, {
 });
 
 const fileCount = countFiles(outDir);
+
+// 404.html 後處理：注入頁面層級 lang（雙語 404 內容以 span 層級標註，
+// 頁面層級採站點預設語言 zh-Hant）。Next 靜態匯出的自動外殼不含 lang。
+const notFoundFile = join(outDir, "404.html");
+if (existsSync(notFoundFile)) {
+  const before = readFileSync(notFoundFile, "utf8");
+  const patched = before.replace(/<html(?![^>]*\blang=)[^>]*>/, '<html lang="zh-Hant">');
+  if (patched !== before) {
+    writeFileSync(notFoundFile, patched);
+    console.log("404.html：已注入 <html lang=\"zh-Hant\">。");
+  }
+}
+
 console.log("");
 console.log(`靜態站台已輸出至 ${outDir}/（${fileCount} 個檔案）。`);
 console.log("本地預覽：npm run serve:static");
