@@ -1,8 +1,16 @@
 import Link from "next/link";
 import "./globals.css";
-import { SITE_NAME, SITE_NAME_EN } from "@/content/site";
+import { SITE_NAME, SITE_NAME_EN, SITE_TITLE } from "@/content/site";
 
-/** 404 頁（雙語導引；靜態匯出為 404.html，GitHub Pages 對未匹配路徑使用） */
+/** 404 頁 metadata（靜態匯出為 404.html；title 會注入 Next 自動外殼的 head） */
+export const metadata = {
+  title: `找不到這一頁／Page not found — ${SITE_TITLE}`,
+};
+
+/** 404 頁（雙語導引；GitHub Pages 對未匹配路徑使用）。
+ *  頁面層級 lang="zh-Hant" 由 build-static.mjs 後處理注入
+ *  （Next 靜態匯出的自動外殼不含 lang）；英文內容以 span 層級
+ *  lang="en" 標註。 */
 export default function NotFound() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-paper px-6 py-16 text-center">
