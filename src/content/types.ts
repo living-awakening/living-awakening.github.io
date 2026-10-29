@@ -45,8 +45,8 @@ export interface Misunderstanding {
 /** 來源筆記型別（G1／G2） */
 export type SourceBook = "jia" | "yi";
 
-/** 介面語言（zh＝繁體中文〔預設〕；en＝英文〔編輯翻譯〕） */
-export type Lang = "zh" | "en";
+/** 介面語言（zh＝繁體中文〔預設〕；en＝英文〔編輯翻譯〕；id＝印尼文〔編輯翻譯〕） */
+export type Lang = "zh" | "en" | "id";
 
 /** 單筆來源（G1 逐項來源對照表） */
 export interface SourceRef {
@@ -63,6 +63,12 @@ export interface SourceRef {
   sequenceEn?: string;
   /** 手札編號補充的編輯英譯（僅英文版使用） */
   noteLabelEn?: string;
+  /** 原篇名的編輯印尼文譯（僅印尼文版使用；非官方授權譯名） */
+  titleId?: string;
+  /** 篇章序號的編輯印尼文譯（如 Pencerahan No. 22；僅印尼文版使用） */
+  sequenceId?: string;
+  /** 手札編號補充的編輯印尼文譯（僅印尼文版使用） */
+  noteLabelId?: string;
   /** 手札編號補充（如「慶淇悟得手札之六」） */
   noteLabel?: string;
   /** 書頁起迄（紙本印刷頁碼；無頁碼寫「未編頁」） */
@@ -81,6 +87,8 @@ export interface BookInfo {
   title: string;
   /** 書名的編輯英譯（僅英文版使用；非官方授權英文版書名） */
   titleEn?: string;
+  /** 書名的編輯印尼文譯（僅印尼文版使用；非官方授權印尼文版書名） */
+  titleId?: string;
   author: string;
   authorNote?: string;
   publisher: string;
@@ -114,9 +122,9 @@ export interface Chapter {
   number: string;
   /** 導覽與控制名稱用的短名（導覽用語，非章名改寫） */
   shortTitle: string;
-  /** 章名（固定，不得更改；英文版為編輯英譯，原文保留於 titleZh） */
+  /** 章名（固定，不得更改；英／印尼文版為編輯譯，原文保留於 titleZh） */
   title: string;
-  /** 英文版保留的原始中文章名（供對等驗證；繁中版不使用） */
+  /** 英／印尼文版保留的原始中文章名（供對等驗證；繁中版不使用） */
   titleZh?: string;
   /** 一句核心（常顯示） */
   core: string;
@@ -161,7 +169,7 @@ export interface Chapter {
   traceability: string;
 }
 
-/** 來源與編輯說明區資料（F3／B4／E0／G2 之公開面向；雙語共用結構） */
+/** 來源與編輯說明區資料（F3／B4／E0／G2 之公開面向；三語共用結構） */
 export interface EditorialInfoData {
   sourcesHeading: string;
   sourceIndexHeading: string;
@@ -176,7 +184,7 @@ export interface EditorialInfoData {
   readingTimeNote: string;
 }
 
-/** 總覽與頁末資料（F2／E7；雙語共用結構） */
+/** 總覽與頁末資料（F2／E7；三語共用結構） */
 export interface OverviewData {
   INTRO: {
     heading: string;

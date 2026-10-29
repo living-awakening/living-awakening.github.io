@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Check, ChevronDown, Globe } from "lucide-react";
-import { LANGUAGES, UI_TEXT, UI_TEXT_EN, languagePath } from "@/content/site";
+import { LANGUAGES, getUI, htmlLangOf, languagePath } from "@/content/site";
 import type { Lang } from "@/content/types";
 
 /** 語言切換時的閱讀狀態交接（ sessionStorage ；僅切換語言時寫入） */
@@ -86,7 +86,7 @@ export function consumeHandoff(): Handoff | null {
 }
 
 /**
- * 語言選擇器（頂欄右側）：按鈕＋下拉選單。
+ * 語言選擇器（頂欄右側）：按鈕＋下拉選單（三語：繁中／英／印尼文）。
  * 鍵盤：Enter／Space 開關；↑↓ 在選項間移動；Escape 關閉並回到按鈕；
  * Tab 關閉並自然移出；Enter／Space 或點選即切換語言。
  * 切換時保留錨點（同章節）與展開狀態（詳見 writeHandoff／consumeHandoff）。
@@ -98,9 +98,7 @@ export function LanguageSwitcher({ current }: { current: Lang }) {
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const menuId = useId();
 
-  const ui = current === "zh" ? UI_TEXT : UI_TEXT_EN;
-  const target: Lang = current === "zh" ? "en" : "zh";
-  const targetPath = languagePath(target);
+  const ui = getUI(current);
 
   const focusItem = useCallback((index: number) => {
     const item = itemRefs.current[index];
@@ -185,9 +183,10 @@ export function LanguageSwitcher({ current }: { current: Lang }) {
     }
   };
 
-  /** 切換語言：保留錨點與閱讀狀態後整頁導覽 */
-  const switchLanguage = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  /** 切換語言：保留錨點與閱讀狀態後整頁導覽（目標語言由選項傳入） */
+  const switchLanguage = (e: React.MouseEvent<HTMLAnchorElement>, target: Lang) => {
     writeHandoff();
+    const targetPath = languagePath(target);
     const anchor = currentAnchor();
     if (anchor) {
       e.preventDefault();
@@ -211,22 +210,27 @@ export function LanguageSwitcher({ current }: { current: Lang }) {
         className="flex min-h-11 items-center gap-1.5 rounded-md border border-line bg-surface px-2.5 text-sm text-ink transition-colors hover:border-teal/50 hover:bg-teal-soft/40 sm:px-3"
       >
         <Globe aria-hidden="true" className="h-4 w-4 text-teal" />
-        <span lang={current === "zh" ? "zh-Hant" : "en"}>{currentName}</span>
+        <span lang={htmlLangOf(current)}>{currentName}</span>
         <ChevronDown
           aria-hidden="true"
           className={`h-3.5 w-3.5 text-ink-soft transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
 
-      {/* 無 JavaScript 時的後備：直接顯示另一語言連結 */}
+      {/* 無 JavaScript 時的後備：直接列出其他語言連結 */}
       <noscript>
-        <a
-          href={targetPath}
-          lang={target === "zh" ? "zh-Hant" : "en"}
-          className="absolute left-0 top-full z-50 mt-1 flex min-h-11 items-center rounded-md border border-line bg-surface px-3 text-sm text-ink"
-        >
-          {LANGUAGES.find((l) => l.code === target)?.name}
-        </a>
+        <div className="absolute left-0 top-full z-50 mt-1 flex flex-col rounded-md border border-line bg-surface p-1 text-sm text-ink">
+          {LANGUAGES.filter((l) => l.code !== current).map((l) => (
+            <a
+              key={l.code}
+              href={languagePath(l.code)}
+              lang={l.htmlLang}
+              className="flex min-h-11 items-center rounded-md px-3 text-ink hover:bg-teal-soft/40"
+            >
+              {l.name}
+            </a>
+          ))}
+        </div>
       </noscript>
 
       {open ? (
@@ -246,7 +250,7 @@ export function LanguageSwitcher({ current }: { current: Lang }) {
                   itemRefs.current[i] = el;
                 }}
                 role="menuitem"
-                href={lang.code === current ? undefined : targetPath}
+                href={lang.code === current ? undefined : languagePath(lang.code)}
                 aria-current={isCurrent ? "true" : undefined}
                 lang={lang.htmlLang}
                 tabIndex={-1}
@@ -255,7 +259,7 @@ export function LanguageSwitcher({ current }: { current: Lang }) {
                     e.preventDefault();
                     closeMenu(true);
                   } else {
-                    switchLanguage(e);
+                    switchLanguage(e, lang.code);
                   }
                 }}
                 onKeyDown={(e) => {
@@ -266,8 +270,9 @@ export function LanguageSwitcher({ current }: { current: Lang }) {
                       closeMenu(true);
                     } else {
                       writeHandoff();
+                      const itemPath = languagePath(lang.code);
                       const anchor = currentAnchor();
-                      window.location.assign(anchor ? `${targetPath}#${anchor}` : targetPath);
+                      window.location.assign(anchor ? `${itemPath}#${anchor}` : itemPath);
                     }
                   }
                 }}

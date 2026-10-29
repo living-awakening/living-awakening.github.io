@@ -5,6 +5,8 @@ import {
   SITE_NAME_EN,
   SITE_TAGLINE,
   SITE_TAGLINE_EN,
+  SITE_TAGLINE_ID,
+  htmlLangOf,
 } from "@/content/site";
 import { ReadingHeader } from "@/components/reading-header";
 import { ChapterSection } from "@/components/chapter-section";
@@ -54,11 +56,16 @@ function IntroSection({ lang, overview, readingTime }: Pick<SitePageProps, "lang
         <p className="mt-3 text-sm leading-relaxed text-[#748077]" lang="en">
           {SITE_TAGLINE_EN}
         </p>
+        {lang === "id" ? (
+          <p className="mt-3 text-sm leading-relaxed text-[#748077]" lang="id">
+            {SITE_TAGLINE_ID}
+          </p>
+        ) : null}
       </div>
       <h1
         id="intro-heading"
         className="mt-7 max-w-[40rem] text-[1.8rem] font-bold leading-snug tracking-wide text-ink sm:text-[2.15rem]"
-        lang={lang === "zh" ? "zh-Hant" : "en"}
+        lang={htmlLangOf(lang)}
       >
         {overview.INTRO.heading}
       </h1>
@@ -182,7 +189,7 @@ function SiteFooter({ ui }: Pick<SitePageProps, "ui">) {
   );
 }
 
-/** 整頁組合：兩種語言共用版面與互動行為，僅內容與介面文字隨語言替換 */
+/** 整頁組合：三種語言共用版面與互動行為，僅內容與介面文字隨語言替換 */
 export function SitePage({
   lang,
   ui,
